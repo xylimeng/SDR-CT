@@ -20,6 +20,7 @@ try
     load(pro_name);
 catch
     cd('.\projection_data');
+    mkdir('original_projection');
     for i=1:1:resolution
         model=squeeze(ph(:,:,i));
         pro=projection(AF1,len_width,loc_width);
@@ -35,14 +36,15 @@ try
     load(pro_name);
 catch
     cd('.\projection_data')
+    mkdir('noisy_projection');
     for i=1:1:resolution
         cd('.\original_projection');
         load([num2str(i),'_pro.mat']);
         pro=pro+0.5*randn(size(pro,1),size(pro,2));
         for ij=1:1:size(pro,1)
-            zz=floor(rand(1,1)*20);
+            zz=floor(rand(1,1)*floor(size(pro,2)*0.15));
             pro(ij,1:zz)=zeros(1,zz);
-            zz=floor(rand(1,1)*20);
+            zz=floor(rand(1,1)*floor(size(pro,2)*0.15));
             pro(ij,size(pro,2)-zz+1:size(pro,2))=zeros(1,zz);
         end
         cd('..\noisy_projection')
