@@ -1,7 +1,12 @@
 [sparseA] = lenloc2sparse(len_width,loc_width,resolution,thetaresolution,1);
 Xs=sparseA;
-top=60;bottom=70;
-cd('./Result/RESULT1')
+top=floor(size(pro,2)*0.3);
+bottom=floor(size(pro,2)*0.8);
+mkdir('Result');
+cd('./Result');
+mkdir('RESULT1');
+mkdir('RESULT2');
+cd('./RESULT1')
 delete('*.mat');
 cd('../RESULT2')
 delete('*.mat');
@@ -38,6 +43,7 @@ for ijk=top:1:bottom
       end
     end
     cd('..\..\')
+    mkdir('.\Result\DIFF_ESTIM');
     cd('.\Result\DIFF_ESTIM');
     save(['diff_',num2str(num_up),'_',num2str(num),'.mat'],'finverse_diff','Fq_diff');   
     cd('..\..\')
