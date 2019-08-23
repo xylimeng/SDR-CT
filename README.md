@@ -10,8 +10,7 @@ resolution=128;thetaresolution=1;width=0.7;
 ## Create_matrix A
 First time we need to calculate the matrix A, and the matrix will be stored at create_A as '.\create_A\A.mat'
 
-
-'''
+```Matlab
 try
     load('.\create_A\A.mat')
 catch
