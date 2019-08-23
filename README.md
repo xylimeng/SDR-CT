@@ -18,8 +18,7 @@ catch
     [len,loc,len_width,loc_width] = calculate_A_twice(thetaresolution,resolution,dimension,width);    
     save('A.mat','len','loc','len_width','loc_width');   
     cd('..\')   
-end
-'''
+end```
 
 ## Forward process
 Next two section in main_simulation.m is to simulate the projection data.
@@ -28,7 +27,9 @@ ratio for blank edges is set as 0.15, we can change in 45 and 47 line
 ## SDR
 SDR algorithm was achieved in SDR.m, top and bottom can be set in SDR.m as the top and bottom slice we need to calculate.
 
+```Matlab
 [sparseA] = lenloc2sparse(len_width,loc_width,resolution,thetaresolution,1);
 Xs=sparseA;
 top=floor(size(pro,2)*0.3);
 bottom=floor(size(pro,2)*0.8);
+end```
