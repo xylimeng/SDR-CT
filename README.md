@@ -10,14 +10,23 @@ resolution=128;thetaresolution=1;width=0.7;
 ## Create_matrix A
 First time we need to calculate the matrix A, and the matrix will be stored at create_A as '.\create_A\A.mat'
 ` ````
+
 try
+
     load('.\create_A\A.mat')
+    
 catch
+
     cd('.\create_A');
+    
     [len,loc,len_width,loc_width] = calculate_A_twice(thetaresolution,resolution,dimension,width);
+    
     save('A.mat','len','loc','len_width','loc_width');
+    
     cd('..\')
+    
 end
+
 ` ````
 
 ## Forward process
