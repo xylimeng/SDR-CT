@@ -35,5 +35,4 @@ SDR algorithm was achieved in SDR.m, top and bottom can be set in SDR.m as the t
 Xs=sparseA;
 top=floor(size(pro,2)*0.3);
 bottom=floor(size(pro,2)*0.8);
-end
 ```
