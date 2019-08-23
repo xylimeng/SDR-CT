@@ -5,7 +5,9 @@ main function is main_simulation.m
 Several parameter can be set at main_simulation like the resolution for the model and thetaresolution for the projection numbers
 width is the width of light we set and the pixel's size is 1.
 
+```Matlab
 resolution=128;thetaresolution=1;width=0.7;
+```
 
 ## Create_matrix A
 First time we need to calculate the matrix A, and the matrix will be stored at create_A as '.\create_A\A.mat'
