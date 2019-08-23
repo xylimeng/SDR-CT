@@ -18,7 +18,8 @@ catch
     [len,loc,len_width,loc_width] = calculate_A_twice(thetaresolution,resolution,dimension,width);    
     save('A.mat','len','loc','len_width','loc_width');   
     cd('..\')   
-end```
+end
+```
 
 ## Forward process
 Next two section in main_simulation.m is to simulate the projection data.
@@ -32,4 +33,5 @@ SDR algorithm was achieved in SDR.m, top and bottom can be set in SDR.m as the t
 Xs=sparseA;
 top=floor(size(pro,2)*0.3);
 bottom=floor(size(pro,2)*0.8);
-end```
+end
+```
