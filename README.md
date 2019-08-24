@@ -37,6 +37,10 @@ bottom=floor(size(pro,2)*0.8);
 According to different iteration times(the path for even iteration time and oll iteration time is different), the console in Matlab will show the path for the output path as 
 ```Matlab
 disp(['The result locate in: ',directnew])
+```
+Then you can choose one slice of the result as
+
+```Matlab
 load([directnew,'\result_',num2str(resolution/2),'.mat']);
 figure(1)
 subplot(2,2,1)
@@ -53,6 +57,8 @@ subplot(2,2,4)
 imshow(mat2gray(FBP_result))
 title('FBP')
 ```
+
+## Result
 
 
 
