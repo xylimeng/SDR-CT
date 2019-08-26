@@ -1,44 +1,50 @@
-# Scalable-CT
-Scalable 3D CT reconstruction utilizing sparsity of neighboring slices 
+# Scalable Double Regularization for 3D Nano-CT Reconstruction
+We utilize the entire 3D Nano-CT volume for simultaneous 3D structural reconstruction across slices through total variation regularization within slices and $L_1$ regularization between adjacent slices.
 
-## Parameter set
-main function is main_simulation.m
-Several parameter can be set at main_simulation like the resolution for the model and thetaresolution for the projection numbers
-width is the width of light we set and the pixel's size is 1.
+## Examples using simulated data 
+The followling demonstration is also in the `main_simulation.m` script.  
+
+### Simulate 3D CT projection data 'pro' 
 
 ```Matlab
-resolution=128;thetaresolution=1;width=0.7;
+%% Specify experiemental parameters & Simulate the true 3D structure 
+resolution=128; % resolution for the model
+thetaresolution=1; % thetaresolution for the projection numbers
+width=0.7; % width of light (the pixel's size is 1)
 nol=resolution*180/thetaresolution;
 nop=resolution*resolution;dimension=1;
 ph=phantom3d(resolution);
 AF1=squeeze(ph(:,:,resolution/2));
+
+%% Create matrix A
+% the returned variables are saved in '.\create_A\A.mat'" for quick access.
+[len,loc,len_width,loc_width] = calculate_A_twice(thetaresolution,resolution,dimension,width);
+
+%% Generate projection data using a forward process 
+% the returned variables are saved in '.\projection_data" for quick access.
+    for i=1:1:resolution
+        model=squeeze(ph(:,:,i));
+        pro=projection(AF1,len_width,loc_width);
+    end
 ```
 
-## Create_matrix A & Forward process
-First time we need to calculate 
-1.Matrix A: the returned variables are saved in '.\create_A\A.mat'" for quick access.
-2.Simulated projection data. the returned variables are saved in '.\projection_data" for quick access.
-  
-  
-## Input
-If real data is going to be applied in this algorithm, Please save the input (projection data) in the save path as simulated projection data.
+Comments: 
+- 1. For real data application, users just need to substitute the simulated projection data `pro` with the real projection data.
+- 2. In this simulation, we can further add Gaussian noise to the projection data; see `main_simulation.m` for details. 
 
-## SDR
-SDR algorithm was achieved in SDR.m, top and bottom can be set in SDR.m as the top and bottom slice we need to calculate.
+### Apply SDR
+SDR algorithm is implemented in `SDR.m`.
 
 ```Matlab
-[sparseA] = lenloc2sparse(len_width,loc_width,resolution,thetaresolution,1);
-Xs=sparseA;
-top=floor(size(pro,2)*0.3);
-bottom=floor(size(pro,2)*0.8);
+SDR; 
 ```
 
-## Output
-According to different iteration times(the path for even iteration time and oll iteration time is different), the console in Matlab will show the path for the output path as 
+### Output
+According to different iteration times (the path for even iteration time and oll iteration time is different), the console in Matlab will show the path for the output path as 
 ```Matlab
 disp(['The result locate in: ',directnew])
 ```
-Then you can choose one slice of the result as
+Choose one slice of the result for visualization: 
 
 ```Matlab
 load([directnew,'\result_',num2str(resolution/2),'.mat']);
