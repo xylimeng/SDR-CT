@@ -1,61 +1,56 @@
 clear all
 close all
+% Global set:Necessary forboth simulation and real data
 resolution=128;thetaresolution=1;width=0.7;
 nol=resolution*180/thetaresolution;
 nop=resolution*resolution;dimension=1;
-ph=phantom3d(resolution);
-AF1=squeeze(ph(:,:,resolution/2));
-%calcaulate or load matrix
-try
-    load('.\create_A\A.mat')
-catch
-    cd('.\create_A');
-    [len,loc,len_width,loc_width] = calculate_A_twice(thetaresolution,resolution,dimension,width);
-    save('A.mat','len','loc','len_width','loc_width');
-    cd('..\')
+test_slice=resolution/2;
+Simulation=true;
+% load or calculate matrix_A, 
+% the returned variables are saved in ".\create_A\A.mat" for quick access;
+[len,loc,len_width,loc_width] = load_matrix_A(thetaresolution,resolution,dimension,width);
+globalstruct=struct('resolution',resolution,'thetaresolution',thetaresolution,'len_width',len_width,'loc_width',loc_width);
+
+
+% Set by client for simulation data If projection data is ready, ignore this part
+if simulation
+    ph=phantom3d(resolution);
+    AF1=squeeze(ph(:,:,test_slice));
+
+
+    noise_parameter=struct();
+    noise_parameter.add_gaussian='1';% 1 for add gaussian noise
+    noise_parameter.add_blankedges='1';
+    noise_parameter.gaussian=0.5;% 0.5*randn(size(pro,1),size(pro,2))
+    noise_parameter.blankedges_ratio=0.15;%The higher the worse of blank edges problem;
+
+
+    % load or calculate simulated noiseless projection, 
+    % the returned variables are saved in ".\projection_data\original_projection\" for quick access:
+    inputstruct=struct('resolution',resolution,'ph',ph,'AF1',AF1,'len_width',len_width,'loc_width',loc_width);
+    inputstruct.thetaresolution=thetaresolution;
+    proture = load_pro(test_slice,inputstruct);
+    % load or calculate projection corrupted by gaussian noise and blank edges, 
+    % the returned variables are saved in ".\projection_data\noisy_projection\" for quick access:
+    pro=addnoise(test_slice,noise_parameter);
+    %%%%%%%%%%%%%%%%
 end
-%calcaulate or load projection
-try
-    pro_name=['.\projection_data\original_projection\',num2str(resolution/2),'_pro.mat'];
-    load(pro_name);
-catch
-    cd('.\projection_data');
-    mkdir('original_projection');
-    for i=1:1:resolution
-        model=squeeze(ph(:,:,i));
-        pro=projection(AF1,len_width,loc_width);
-        cd('.\original_projection');
-        save([num2str(i),'_pro.mat'],'pro');
-        cd('..\')
-    end
-    cd('..\')
-end
-%corrupted by gaussian noise and blank edges
-try
-    pro_name=['.\projection_data\noisy_projection\',num2str(resolution/2),'_pro.mat'];
-    load(pro_name);
-catch
-    cd('.\projection_data')
-    mkdir('noisy_projection');
-    for i=1:1:resolution
-        cd('.\original_projection');
-        load([num2str(i),'_pro.mat']);
-        pro=pro+0.5*randn(size(pro,1),size(pro,2));
-        for ij=1:1:size(pro,1)
-            zz=floor(rand(1,1)*floor(size(pro,2)*0.15));
-            pro(ij,1:zz)=zeros(1,zz);
-            zz=floor(rand(1,1)*floor(size(pro,2)*0.15));
-            pro(ij,size(pro,2)-zz+1:size(pro,2))=zeros(1,zz);
-        end
-        cd('..\noisy_projection')
-        save([num2str(i),'_pro.mat'],'pro');
-        cd('..\')
-    end
-    cd('..\')
-end
-load(['.\projection_data\noisy_projection\',num2str(resolution/2),'_pro.mat']);
-FBP;
-SDR;
+    
+
+
+
+%%%Inverse_algorithm
+pro_direction='.\projection_data\noisy_projection\';
+FBP_result=FBP_algorithm(test_slice,pro_direction,globalstruct);
+
+SDR_param=struct();
+SDR_param.add_gaussian='1';% 1 for add gaussian noise
+SDR_param.add_blankedges='1';
+SDR_param.gaussian=0.5;% 0.5*randn(size(pro,1),size(pro,2))
+SDR_param.blankedges_ratio=0.15;%The higher the worse of blank edges problem;
+
+SDR_result=SDR_algorithm();
+
 disp(['The result locate in: ',directnew])
 load([directnew,'\result_',num2str(resolution/2),'.mat']);
 figure(1)
