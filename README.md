@@ -59,6 +59,6 @@ title('FBP')
 ```
 
 ## Result
-
+![image](https://https://github.com/xylimeng/Scalable-CT/blob/master/Result.png)
 
 
