@@ -1,5 +1,6 @@
 [sparseA] = lenloc2sparse(len_width,loc_width,resolution,thetaresolution,1);
 Xs=sparseA;
+% top and bottom slice we need to calculate 
 top=floor(size(pro,2)*0.3);
 bottom=floor(size(pro,2)*0.8);
 mkdir('Result');
