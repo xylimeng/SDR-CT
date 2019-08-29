@@ -1,69 +1,69 @@
 # Scalable Double Regularization for 3D Nano-CT Reconstruction
 We utilize the entire 3D Nano-CT volume for simultaneous 3D structural reconstruction across slices through total variation regularization within slices and $L_1$ regularization between adjacent slices.
 
-## Examples using simulated data 
+## Examples 
 The followling demonstration is also in the `main_simulation.m` script.  
 
-### Simulate 3D CT projection data 'pro' 
-
+### Global parameter setting
 ```Matlab
-%% Specify experiemental parameters & Simulate the true 3D structure 
-resolution=128; % resolution for the model
-thetaresolution=1; % thetaresolution for the projection numbers
-width=0.7; % width of light (the pixel's size is 1)
+% Global set:Necessary forboth simulation and real data
+resolution=128;thetaresolution=1;width=0.7;
 nol=resolution*180/thetaresolution;
 nop=resolution*resolution;dimension=1;
-ph=phantom3d(resolution);
-AF1=squeeze(ph(:,:,resolution/2));
-
-%% Create matrix A
-% the returned variables are saved in '.\create_A\A.mat'" for quick access.
-[len,loc,len_width,loc_width] = calculate_A_twice(thetaresolution,resolution,dimension,width);
-
-%% Generate projection data using a forward process 
-% the returned variables are saved in '.\projection_data" for quick access.
-    for i=1:1:resolution
-        model=squeeze(ph(:,:,i));
-        pro=projection(AF1,len_width,loc_width);
-    end
+test_slice=resolution/2;
+simulation=true;
+[len,loc,len_width,loc_width] = load_matrix_A(thetaresolution,resolution,dimension,width);
+len=len_width;
+loc=loc_width;
+globalstruct=struct('resolution',resolution,'thetaresolution',thetaresolution,'len_width',len,'loc_width',loc);
 ```
+Comments: 
+- 1. If simulation is set as true, it means the code will use simulated data. 
+
+
+Comments: If simulation is set as true, it means the code will use simulated data. 
+
+### Simulate 3D CT projection data 'pro' 
+```Matlab
+    ph=phantom3d(resolution);
+    AF1=squeeze(ph(:,:,test_slice));
+
+    noise_parameter=struct();
+    noise_parameter.resolution=resolution;
+    noise_parameter.add_gaussian=1;% 1 for add gaussian noise
+    noise_parameter.add_blankedges=1;
+    noise_parameter.gaussian=0.5;% 0.5*randn(size(pro,1),size(pro,2))
+    noise_parameter.blankedges_ratio=0.15;%The higher the worse of blank edges problem;
+``` 
 
 Comments: 
-- 1. For real data application, users just need to substitute the simulated projection data `pro` with the real projection data.
-- 2. In this simulation, we can further add Gaussian noise to the projection data; see `main_simulation.m` for details. 
+- 1. Simulation data is 3D Shepp-logan model. 
+- 2. We can further add Gaussian noise to the projection data; We can choose the parameter for different leval of gaussian noise and blankedges_ratio.
 
-### Apply SDR
-SDR algorithm is implemented in `SDR.m`.
-
+### Calculate FBP result
 ```Matlab
-SDR; 
-```
+pro_direction='.\projection_data\noisy_projection\';
+FBP_result=FBP_algorithm(test_slice,pro_direction,globalstruct);
+``` 
+Comments: 
+- 1. The function FBP_algorithm calculate every slices of the data, the test_slice is just used for showing of result
 
-### Output
-According to different iteration times (the path for even iteration time and oll iteration time is different), the console in Matlab will show the path for the output path as 
+### Calculate SDR result
 ```Matlab
-disp(['The result locate in: ',directnew])
+SDR_param=struct();
+SDR_param.TVresidual=-1;% if residual choose less than 0, then stop rule is iteration times
+SDR_param.TVmaxIte=4;
+SDR_param.TVSHUF=true;
+SDR_param.OutmaxIte=3;
+%SDR_param.top=floor(size(pro,2)*0.3);
+%SDR_param.bottom=floor(size(pro,2)*0.8);
+SDR_param.top=38;
+SDR_param.bottom=60;
+directnew = SDR_algorithm(globalstruct,SDR_param,pro_direction);
 ```
-Choose one slice of the result for visualization: 
-
-```Matlab
-load([directnew,'\result_',num2str(resolution/2),'.mat']);
-figure(1)
-subplot(2,2,1)
-imshow(mat2gray(squeeze(ph(:,:,resolution/2))))
-title('Model')
-subplot(2,2,2)
-load(['.\projection_data\noisy_projection\',num2str(resolution/2),'_pro.mat']);
-imshow(mat2gray(pro))
-title('Pro')
-subplot(2,2,3)
-imshow(mat2gray(finverse))
-title('SDR')
-subplot(2,2,4)
-imshow(mat2gray(FBP_result))
-title('FBP')
-```
-
+Comments: 
+- 1. First Set for SDR param. 
+- 2. The function FBP_algorithm calculate every slices(from top to bottom) of the data. Then client can find result from the direction in "directnew"
 ## Result
 ![image](https://github.com/xylimeng/Scalable-CT/blob/master/Result.png)
 
