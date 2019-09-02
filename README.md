@@ -31,16 +31,14 @@ If `simulation` is set as true, the code will use simulated data. If real data i
 ``` 
 
 Comments: 
-- We can choose if we add Gaussian noise to the observation data. Users can vary the leval of gaussian noise and blankedges_ratio in the above part.
+- We can choose whether we add Gaussian noise to the observation data or not in the above part. Users can vary the leval of gaussian noise(change noise_parameter.gaussian) and blankedges_ratio(change noise_parameter.blankedges_ratio).
 
 ### Calculate FBP result
 ```Matlab
-pro_direction='.\projection_data\noisy_projection\';
-test_slice=resolution/2; % test_slice indicates which slice is to be used for displaying the reconstruction
-FBP_result=FBP_algorithm(test_slice,pro_direction,globalstruct);
+FBP_result_direct=FBP_algorithm(pro_direction,globalstruct);
 ``` 
 Comments: 
-- The function `FBP_algorithm` calculates every slices of the data (from top to bottom). Users can find result from the direction in "directnew".(???) 
+- The function `FBP_algorithm` calculates every slices of the data (from top to bottom). Users can find result from the direction in "FBP_result_direct".
 
 ### Calculate SDR result
 ```Matlab
