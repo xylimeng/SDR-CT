@@ -38,7 +38,7 @@ Comments:
 FBP_result_direct=FBP_algorithm(pro_direction,globalstruct);
 ``` 
 Comments: 
-- The function `FBP_algorithm` calculates every slices of the data (from top to bottom). Users can find result from the direction in "FBP_result_direct".
+- The function `FBP_algorithm` calculates every slices of the data (from the first to the last). Users can find result from the direction in "FBP_result_direct".
 
 ### Calculate SDR result
 ```Matlab
