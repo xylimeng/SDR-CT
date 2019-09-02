@@ -19,27 +19,26 @@ If `simulation` is set as `true`, the code will use simulated data. For real dat
 
 ### Simulate 3D CT projection data 'pro' using 3D Shepp-logan model
 ```Matlab
-    ph=phantom3d(resolution);
-    AF1=squeeze(ph(:,:,test_slice));
+ph=phantom3d(resolution);
+AF1=squeeze(ph(:,:,test_slice));
 
-    noise_parameter=struct();
-    noise_parameter.resolution=resolution;
-    noise_parameter.add_gaussian=1;% 1 for adding gaussian noise. If 1 is chosen, then users should specify noise_paramter.gaussian
-    noise_parameter.add_blankedges=1;% 1 for adding blankedges. If 1 is chosen, then users should specify noise_parameter.blankedges_ratio
-    noise_parameter.gaussian=0.5;% 0.5*randn(size(pro,1),size(pro,2))
-    noise_parameter.blankedges_ratio=0.15; % Hihger ratio means more blank edges. 
+noise_parameter=struct();
+noise_parameter.resolution=resolution;
+% Add Gaussian noise 
+noise_parameter.add_gaussian=1;% 1 to indicate adding gaussian noise. If 1 is chosen, then users should specify noise_paramter.gaussian
+noise_parameter.gaussian=0.5;% 0.5*randn(size(pro,1),size(pro,2)) % standard derivation of Gaussian noise 
+
+% Add blank edges 
+noise_parameter.add_blankedges=1;% 1 to indicate adding blankedges. If 1 is chosen, then users should specify noise_parameter.blankedges_ratio
+noise_parameter.blankedges_ratio=0.15; % Higher ratio means more blank edges. 
 ``` 
-
-Comments: 
-- We can choose whether or not add Gaussian noise to the observation data. Users can vary the level of gaussian noise (through `noise_parameter.gaussian`) and blankedges_ratio (through `noise_parameter.blankedges_ratio`).
 
 ### Calculate FBP reconstructions
 ```Matlab
-% Reconstruct all slices of the data (from the first to the last). Users can find the reconstructions from the directory in FBP_result_direct.
+% Reconstruct all slices of the data (from the first to the last). 
+% Users can find the reconstructions from the directory saved in FBP_result_direct.
 FBP_result_direct=FBP_algorithm(pro_direction,globalstruct);
 ``` 
-Comments: 
-- The function `FBP_algorithm` 
 
 ### Calculate SDR reconstructions
 ```Matlab
@@ -54,7 +53,8 @@ SDR_param.OutmaxIte=3;
 SDR_param.top=38;
 SDR_param.bottom=70;
 
-% Reconstruct all slices ranging from specified `top` to `bottom` of the data. Users can find reconstructions from the directory saved in `directnew`. 
+% Reconstruct all slices ranging from specified `top` to `bottom` of the data. 
+% Users can find reconstructions from the directory saved in `directnew`. 
 directnew = SDR_algorithm(globalstruct,SDR_param,pro_direction);
 ```
 
