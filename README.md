@@ -15,7 +15,7 @@ simulation=true;
 globalstruct=struct('resolution',resolution,'thetaresolution',thetaresolution,'len_width',len_width,'loc_width',loc_width);
 ```
 
-If `simulation` is set as true, the code will use simulated data. If real data is applied, choose simulation as flase and put all the observation data into one direction and record the direction in the variation 'pro_direction'
+If `simulation` is set as true, the code will use simulated data. If real data is applied, choose simulation as false and put all the observation data into one direction and record the direction in the variation 'pro_direction'
 
 ### Simulate 3D CT projection data 'pro' using 3D Shepp-logan model
 ```Matlab
