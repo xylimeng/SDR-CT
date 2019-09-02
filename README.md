@@ -10,14 +10,12 @@ The followling demonstration is also in the `main_simulation.m` script.
 resolution=128; thetaresolution=1; width=0.7;
 nol=resolution*180/thetaresolution;
 nop=resolution*resolution;dimension=1;
-simulation=true; (???)
+simulation=true; 
 [len,loc,len_width,loc_width] = load_matrix_A(thetaresolution,resolution,dimension,width);
-len=len_width; (???)
-loc=loc_width; (???) 
-globalstruct=struct('resolution',resolution,'thetaresolution',thetaresolution,'len_width',len,'loc_width',loc);
+globalstruct=struct('resolution',resolution,'thetaresolution',thetaresolution,'len_width',len_width,'loc_width',loc_width);
 ```
 
-If `simulation` is set as true, the code will use simulated data. 
+If `simulation` is set as true, the code will use simulated data. If real data is applied, choose simulation as flase and put all the observation data into one direction and record the direction in the variation 'pro_direction'
 
 ### Simulate 3D CT projection data 'pro' using 3D Shepp-logan model
 ```Matlab
@@ -26,14 +24,14 @@ If `simulation` is set as true, the code will use simulated data.
 
     noise_parameter=struct();
     noise_parameter.resolution=resolution;
-    noise_parameter.add_gaussian=1;% indicator for adding gaussian noise
-    noise_parameter.add_blankedges=1;
+    noise_parameter.add_gaussian=1;% 1 for add gaussian noise, If 1 is choosen, then client should choose noise_paramter.gaussian
+    noise_parameter.add_blankedges=1;% 1 for add blankedges, If
     noise_parameter.gaussian=0.5;% 0.5*randn(size(pro,1),size(pro,2))
     noise_parameter.blankedges_ratio=0.15;%The higher the worse of blank edges problem;
 ``` 
 
 Comments: 
-- We can further add Gaussian noise to the projection data (???). Users can vary the leval of gaussian noise and blankedges_ratio.
+- We can choose if we add Gaussian noise to the observation data. Users can vary the leval of gaussian noise and blankedges_ratio in the above part.
 
 ### Calculate FBP result
 ```Matlab
