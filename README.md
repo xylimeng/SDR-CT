@@ -60,6 +60,7 @@ Comments:
 - 2. The function `SDR_algorithm` calculates all slices ranging from specified `top` to `bottom` of the data. Users can find reconstructions from the direction in `directnew`. 
 
 ## Result
-![image](https://github.com/xylimeng/Scalable-CT/blob/master/Result.png)
+![image](https://github.com/xylimeng/SDR-CT/blob/master/Result2.png)
+
 
 
