@@ -25,8 +25,8 @@ AF1=squeeze(ph(:,:,test_slice));
 noise_parameter=struct();
 noise_parameter.resolution=resolution;
 % Add Gaussian noise 
-noise_parameter.add_gaussian=1;% 1 to indicate adding gaussian noise. If 1 is chosen, then users should specify noise_paramter.gaussian
-noise_parameter.gaussian=0.5;% 0.5*randn(size(pro,1),size(pro,2)) % standard derivation of Gaussian noise 
+noise_parameter.add_gaussian=1; % 1 to indicate adding gaussian noise. If 1 is chosen, then users should specify noise_paramter.gaussian
+noise_parameter.gaussian=0.5; % standard derivation of Gaussian noise 
 
 % Add blank edges 
 noise_parameter.add_blankedges=1;% 1 to indicate adding blankedges. If 1 is chosen, then users should specify noise_parameter.blankedges_ratio
