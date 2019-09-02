@@ -50,7 +50,7 @@ SDR_param.OutmaxIte=3;
 %SDR_param.top=floor(size(pro,2)*0.3);
 %SDR_param.bottom=floor(size(pro,2)*0.8);
 SDR_param.top=38;
-SDR_param.bottom=60;
+SDR_param.bottom=70;
 directnew = SDR_algorithm(globalstruct,SDR_param,pro_direction);
 ```
 Comments: 
