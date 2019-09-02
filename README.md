@@ -15,7 +15,7 @@ simulation=true;
 globalstruct=struct('resolution',resolution,'thetaresolution',thetaresolution,'len_width',len_width,'loc_width',loc_width);
 ```
 
-If `simulation` is set as true, the code will use simulated data. If real data is applied, choose simulation as false and put all the observation data into one direction and record the direction in the variation 'pro_direction'
+If `simulation` is set as `true`, the code will use simulated data. For real data application, set `simulation` as `false` and put observations into one directory and save the path of this directory to the variable `pro_direction`. 
 
 ### Simulate 3D CT projection data 'pro' using 3D Shepp-logan model
 ```Matlab
@@ -24,24 +24,26 @@ If `simulation` is set as true, the code will use simulated data. If real data i
 
     noise_parameter=struct();
     noise_parameter.resolution=resolution;
-    noise_parameter.add_gaussian=1;% 1 for add gaussian noise, If 1 is choosen, then client should choose noise_paramter.gaussian
-    noise_parameter.add_blankedges=1;% 1 for add blankedges, If
+    noise_parameter.add_gaussian=1;% 1 for adding gaussian noise. If 1 is chosen, then users should specify noise_paramter.gaussian
+    noise_parameter.add_blankedges=1;% 1 for adding blankedges. If 1 is chosen, then users should specify noise_parameter.blankedges_ratio
     noise_parameter.gaussian=0.5;% 0.5*randn(size(pro,1),size(pro,2))
-    noise_parameter.blankedges_ratio=0.15;%The higher the worse of blank edges problem;
+    noise_parameter.blankedges_ratio=0.15; % Hihger ratio means more blank edges. 
 ``` 
 
 Comments: 
-- We can choose whether we add Gaussian noise to the observation data or not in the above part. Users can vary the leval of gaussian noise(change noise_parameter.gaussian) and blankedges_ratio(change noise_parameter.blankedges_ratio).
+- We can choose whether or not add Gaussian noise to the observation data. Users can vary the level of gaussian noise (through `noise_parameter.gaussian`) and blankedges_ratio (through `noise_parameter.blankedges_ratio`).
 
-### Calculate FBP result
+### Calculate FBP reconstructions
 ```Matlab
+% Reconstruct all slices of the data (from the first to the last). Users can find the reconstructions from the directory in FBP_result_direct.
 FBP_result_direct=FBP_algorithm(pro_direction,globalstruct);
 ``` 
 Comments: 
-- The function `FBP_algorithm` calculates every slice of the data (from the first to the last). Users can find result from the direction in "FBP_result_direct".
+- The function `FBP_algorithm` 
 
-### Calculate SDR result
+### Calculate SDR reconstructions
 ```Matlab
+% First Set for SDR param.
 SDR_param=struct();
 SDR_param.TVresidual=-1;% if residual choose less than 0, then stop rule is iteration times
 SDR_param.TVmaxIte=4;
@@ -51,11 +53,10 @@ SDR_param.OutmaxIte=3;
 %SDR_param.bottom=floor(size(pro,2)*0.8);
 SDR_param.top=38;
 SDR_param.bottom=70;
+
+% Reconstruct all slices ranging from specified `top` to `bottom` of the data. Users can find reconstructions from the directory saved in `directnew`. 
 directnew = SDR_algorithm(globalstruct,SDR_param,pro_direction);
 ```
-Comments: 
-- 1. First Set for SDR param. 
-- 2. The function `SDR_algorithm` calculates all slices ranging from specified `top` to `bottom` of the data. Users can find reconstructions from the direction in `directnew`. 
 
 ## Result
 ![image](https://github.com/xylimeng/SDR-CT/blob/master/Result2.png)
