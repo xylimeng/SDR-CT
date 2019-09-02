@@ -59,6 +59,7 @@ directnew = SDR_algorithm(globalstruct,SDR_param,pro_direction);
 ```
 
 ## Result
+We compare the reconstructions by FBP and SDR using 60th slice
 ![image](https://github.com/xylimeng/SDR-CT/blob/master/Result2.png)
 
 
